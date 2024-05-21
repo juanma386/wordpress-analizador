@@ -83,12 +83,41 @@ add_action('admin_init', function(){
 });
 
 
+function trigger_visitor_data_cron_event() {
+  // Use the WordPress REST API to trigger the cron event
+  $response = wp_remote_post(
+    get_rest_url() . '/wp/v2/events/' . 'store_visitor_data_cron_job',
+    array(
+      'method' => 'POST',
+      'headers' => array(
+        'Authorization' => 'Bearer ' . get_auth_token(),
+      ),
+    )
+  );
+
+  // Check the response for success or error
+  if (is_wp_error($response) || !empty($response['errors'])) {
+    // Handle error
+    echo 'Error triggering cron event: ' . $response->get_error_message();
+  } else {
+    // Handle success
+    echo 'Cron event triggered successfully.';
+  }
+}
+
+
+
 function analizador_setup_widget() {
     $token = get_option('analizador_key_token', '');
     $website_id = get_option('analizador_website_id', '');
 
+    echo '
+        <a href="options-general.php?page=analizador-settings" class="analizador-settings">
+            <span class="dashicons dashicons-admin-generic analizador-settings-icon" alt="Configuraciones del Analizador Web"></span>
+        </a>
+        ';
     if ($website_id) {
-        echo '<p>El Token esta activo y el identificador esta almacenado listo.</p>';
+        
         echo '<div data-website-id="' . esc_attr($website_id) . '" id="analizador-website-id">
         <canvas id="canvas" width="640" height="480"></canvas>
         </div>';
@@ -170,6 +199,34 @@ function analizador_settings_page() {
         'analizador_settings_page_html'
     );
 }
+function register_cron_handler() {
+    include_once 'cron-handler.php';
+}
+
+// Agregar la acción para que se ejecute al hacer clic en el botón
+add_action('admin_post_manual_refresh_data', 'register_cron_handler');
+
+function add_refresh_data_button() {
+    ?>
+    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+        <input type="hidden" name="action" value="manual_refresh_data">
+        <?php wp_nonce_field('manual_refresh_data_nonce', 'manual_refresh_data_nonce'); ?>
+        <button type="submit" class="button button-primary">Manual Refresh Data</button>
+    </form>
+    <?php
+
+    // Verificar si hay un mensaje de retorno y mostrarlo
+    if (isset($_GET['message'])) {
+        if ($_GET['message'] == 'success') {
+            echo '<div class="notice notice-success is-dismissible"><p>Operación finalizada con éxito.</p></div>';
+        } elseif ($_GET['message'] == 'error') {
+            echo '<div class="notice notice-error is-dismissible"><p>Error al programar la tarea cron.</p></div>';
+        } elseif ($_GET['message'] == 'queued') {
+            echo '<div class="notice notice-warning is-dismissible"><p>Ya hay una tarea en cola.</p></div>';
+        }
+    }
+}
+
 
 function analizador_settings_page_html() {
     if (!current_user_can('manage_options')) {
@@ -178,24 +235,81 @@ function analizador_settings_page_html() {
 
     if (isset($_POST['analizador_key_token'])) {
         update_option('analizador_key_token', sanitize_text_field($_POST['analizador_key_token']));
-        echo '<div class="updated"><p>Token guardado con éxito.</p></div>';
+        echo '<div class="updated"><p>' . __("Token Saved Successfully") . '.</p></div>';
     }
 
     $token = get_option('analizador_key_token', '');
 
     ?>
-    <div class="wrap">
-        <h1>Configuración del Analizador</h1>
-        <form method="POST">
-            <table class="form-table">
-                <tr valign="top">
-                    <th scope="row">Analizador Key Token</th>
-                    <td><input type="text" name="analizador_key_token" value="<?php echo esc_attr($token); ?>" class="regular-text" /></td>
-                </tr>
-            </table>
-            <?php submit_button('Guardar Token'); ?>
-        </form>
+<div class="wrap">
+  <h1><?= __("Setting of Analizador") ?></h1>
+
+  
+    <div class="analizador-registration-prompt">
+      <p>
+        <?= __("The Key Token Analyzer is obtained within our website") ?>
+        <ol>
+          <li> <a href="https://analizador.ar/signup"><?= __("SignUp your Account.") ?></a></li>
+          <li> <a href="https://analizador.ar/settings/api"><?= __("Get <span>Analizador Key Token</span>.") ?></a></li>
+          <li> <?= __("Wait for the system to record data or refresh information manually.") ?>  </li>
+          <li><?= __("Get started with the product.") ?></li>
+        </ol>
+       
+      </p>
     </div>
+   <?php 
+    ?>
+    <div class="refresh-data-box">
+        <h3><?=__("Update Manual Data")?></h3>
+        <div class="inside">
+            <?php add_refresh_data_button(); ?>
+        </div>
+    </div>
+    <style>
+        .refresh-data-box {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .refresh-data-box h3 {
+            margin-top: 0;
+        }
+    </style>
+    <?php
+    ?>
+    <?php 
+    ?>
+    <div class="refresh-data-box">
+        <h3><?=__("Analizador Key Token")?></h3>
+        <div class="inside">
+            <form method="POST">
+            <table class="form-table">
+            <tr valign="top">
+                <th scope="row"><?= __("Analizador Key Token")?></th>
+                <td><input type="password" name="analizador_key_token" value="<?php echo esc_attr(md5($token)); ?>" class="regular-text" /></td>
+            </tr>
+            </table>
+            <?php submit_button(__("Save Token")); ?>
+        </form>
+        </div>
+    </div>
+    <style>
+        .refresh-data-box {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .refresh-data-box h3 {
+            margin-top: 0;
+        }
+    </style>
+    <?php
+    ?>
+
+  
+</div>
     <?php
 }
 
