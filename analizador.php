@@ -53,38 +53,11 @@ add_action('admin_init', function(){
         });
 
 
-        $pageviews_7_days = get_option('analizador_stats_7_days_pageviews', []);
-        $visitors_7_days = get_option('analizador_stats_7_days_visitors', []);
-        $pageviews_15_days = get_option('analizador_stats_15_days_pageviews', []);
-        $visitors_15_days = get_option('analizador_stats_15_days_visitors', []);
-        $pageviews_30_days = get_option('analizador_stats_30_days_pageviews', []);
-        $visitors_30_days = get_option('analizador_stats_30_days_visitors', []);
-
-        
-
-        echo '<script>
-            var statsData = {
-                "7_days": {
-                    "pageviews": ' . json_encode($pageviews_7_days) . ',
-                    "visitors": ' . json_encode($visitors_7_days) . '
-                },
-                "15_days": {
-                    "pageviews": ' . json_encode($pageviews_15_days) . ',
-                    "visitors": ' . json_encode($visitors_15_days) . '
-                },
-                "30_days": {
-                    "pageviews": ' . json_encode($pageviews_30_days) . ',
-                    "visitors": ' . json_encode($visitors_30_days) . '
-                }
-            };
-        </script>
-        ';
     endif;
 });
 
 
 function trigger_visitor_data_cron_event() {
-  // Use the WordPress REST API to trigger the cron event
   $response = wp_remote_post(
     get_rest_url() . '/wp/v2/events/' . 'store_visitor_data_cron_job',
     array(
@@ -95,12 +68,9 @@ function trigger_visitor_data_cron_event() {
     )
   );
 
-  // Check the response for success or error
   if (is_wp_error($response) || !empty($response['errors'])) {
-    // Handle error
     echo 'Error triggering cron event: ' . $response->get_error_message();
   } else {
-    // Handle success
     echo 'Cron event triggered successfully.';
   }
 }
@@ -118,8 +88,54 @@ function analizador_setup_widget() {
         ';
     if ($website_id) {
         
+        $pageviews_7_days = get_option('analizador_stats_7_days_pageviews', []);
+        $visitors_7_days = get_option('analizador_stats_7_days_visitors', []);
+        $pageviews_15_days = get_option('analizador_stats_15_days_pageviews', []);
+        $visitors_15_days = get_option('analizador_stats_15_days_visitors', []);
+        $pageviews_30_days = get_option('analizador_stats_30_days_pageviews', []);
+        $visitors_30_days = get_option('analizador_stats_30_days_visitors', []);
+
+        
+
+        echo '<script>
+            let dataChart = {};
+            var statsData = {
+                "7_days": {
+                    "pageviews": ' . json_encode($pageviews_7_days) . ',
+                    "visitors": ' . json_encode($visitors_7_days) . '
+                },
+                "15_days": {
+                    "pageviews": ' . json_encode($pageviews_15_days) . ',
+                    "visitors": ' . json_encode($visitors_15_days) . '
+                },
+                "30_days": {
+                    "pageviews": ' . json_encode($pageviews_30_days) . ',
+                    "visitors": ' . json_encode($visitors_30_days) . '
+                }
+            };
+        </script>
+        ';
         echo '<div data-website-id="' . esc_attr($website_id) . '" id="analizador-website-id">
+        <span onclick="sevenDays()" class="badge-analizador">7 ' . __("days") . '</span>
+        <span  onclick="fifteenDays()" class="badge-analizador">15 ' . __("days") . '</span>
+        <span  onclick="thirtyDays()" class="badge-analizador">30 ' . __("days") . '</span>
+
         <canvas id="canvas" width="640" height="480"></canvas>
+        <script>
+            dataChart.chartService(7);
+            function sevenDays() {
+                dataChart.chartService(7);
+            }
+
+            function fifteenDays() {
+                dataChart.chartService(15);
+            }
+
+            function thirtyDays() {
+                dataChart.chartService(30);
+            }
+
+        </script>
         </div>';
         return;
     }
@@ -203,7 +219,7 @@ function register_cron_handler() {
     include_once 'cron-handler.php';
 }
 
-// Agregar la acción para que se ejecute al hacer clic en el botón
+
 add_action('admin_post_manual_refresh_data', 'register_cron_handler');
 
 function add_refresh_data_button() {
@@ -215,7 +231,7 @@ function add_refresh_data_button() {
     </form>
     <?php
 
-    // Verificar si hay un mensaje de retorno y mostrarlo
+    
     if (isset($_GET['message'])) {
         if ($_GET['message'] == 'success') {
             echo '<div class="notice notice-success is-dismissible"><p>Operación finalizada con éxito.</p></div>';
