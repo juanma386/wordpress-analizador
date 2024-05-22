@@ -83,6 +83,10 @@ function analizador_setup_widget() {
         <a href="options-general.php?page=analizador-settings" class="analizador-settings">
             <span class="dashicons dashicons-admin-generic analizador-settings-icon" alt="Configuraciones del Analizador Web"></span>
         </a>
+        <a class="analizador-settings">
+            <span id="changeChartTypeButton"  class="dashicons dashicons-randomize analizador-settings-icon" alt="Change View Chart"></span>
+        </a>
+        
         <form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" class="analizador-settings">
             <input type="hidden" name="action" value="manual_refresh_data">
             ' . wp_nonce_field('manual_refresh_data_nonce', 'manual_refresh_data_nonce') . ' 
@@ -126,7 +130,6 @@ function analizador_setup_widget() {
 
         <canvas id="canvas" width="640" height="480"></canvas>
         <script>
-            dataChart.chartService(7);
             function sevenDays() {
                 dataChart.chartService(7);
             }
