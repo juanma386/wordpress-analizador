@@ -38,7 +38,7 @@ For older versions of Wordpress or manual installation:
 1. Download the plugin zip file
 2. Upload the entire `wordpress-analizador` folder to the `/wp-content/plugins/` directory of your Wordpress installation
 3. Activate the plugin through the \'Plugins\' menu in WordPress
-4. Add your ANALIZADOR API Login to the wordpress-analizador Plugin settings page
+4. Add your ANALIZADOR API token to the wordpress-analizador Plugin settings page
 5. View your widget the plugin via the `Desktop WordPress`
 
 Some Web hosts block the get data if not work php-curl read the troubleshooting below
