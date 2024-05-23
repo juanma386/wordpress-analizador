@@ -1,16 +1,17 @@
 === Analizador ===
 Author URI: https://hexome.cloud/
 Plugin URI: https://analizador.ar
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl.html
 Donate link: https://donate.stripe.com/aEUcOHegJ7EN0EweV3
 Version: 1.0.0
 Contributors: yuma2020
-Tags: web analitycs, web, simple
+Tags: Web analysis
 Requires at least: WordPress 4.7
-Tested up to: WordPress 6.5
-Requires PHP: 8.1
+Tested up to: 6.5
+Requires PHP: 7.2.5
 Stable tag: 1.0.0
-License: GPLv3
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
 
 Analizador Web Simple, this Web Analyzer is an indispensable plugin for those looking to thoroughly understand how their website works.
 
