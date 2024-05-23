@@ -9,7 +9,7 @@ Requires at least: WordPress 4.7
 Tested up to: WordPress 6.5
 Requires PHP: 8.1
 Stable tag: 1.0.0
-License: GPLv2
+License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Analizador Web Simple, this Web Analyzer is an indispensable plugin for those looking to thoroughly understand how their website works.
