@@ -2,57 +2,53 @@
 Author URI: https://hexome.cloud/
 Plugin URI: https://analizador.ar
 Donate link: https://donate.stripe.com/aEUcOHegJ7EN0EweV3
+Version: 1.0.0
 Contributors: yuma2020
-Tags: analitycs, web, simple
-Requires at least: 6.5.3
-Tested up to: 6.5.3
-Requires PHP: 8.2.8
+Tags: web analitycs, web, simple
+Requires at least: WordPress 4.7
+Tested up to: WordPress 6.5
+Requires PHP: 8.1
 Stable tag: 1.0.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Analizador Web Simple
+Analizador Web Simple, this Web Analyzer is an indispensable plugin for those looking to thoroughly understand how their website works.
 
 == Description ==
-Web Analyzer is an indispensable plugin for those looking to thoroughly understand how their website works. 
+  With Web Analizador Simple, you can explore a wide range of statistics, from visitor traffic to user behavior on your site. Get insights into the most visited pages, time spent on site, traffic sources, and more.
 
+Easily add stock photos to your blog posts without leaving WordPress. Choose from many millions stock photos from 123RF, 35,000 are added daily. Simply select the photo you want to use, purchase a license to use it from $1, and the plugin will automatically add it to your blog post. Edit the photo online with our powerful integrated photo editor.
 
-A few notes about the sections above:
-
-*   "Contributors" is a comma separated list of wordpress.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
-
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
-
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+== Screenshots ==
+1. Settings Page of the Plugin
+2. Widget Desktop
 
 
 == Frequently Asked Questions ==
-
-= A question that someone might have =
-
-An answer to that question.
+= Q: I have a question or need help – where can i find it? =
+A: Please check our Help & FAQ Website for a more detailed help.
 
 
 == Installation ==
+This section describes how to install the plugin and get it work.
 
-1. Go to `Plugins` in the Admin menu
-2. Click on the button `Add new`
-3. Search for `Analizador` and click 'Install Now' or click on the `upload` link to upload `analizador.zip`
-4. Click on `Activate plugin`
+You can install the plugin automatically from within your Wordpress interface. Simply login to Wordpress, select Plugins from the menu and then Add New. Search for \"wordpress-analizador\" and click the Install link to automatically install the plugin.
+
+For older versions of Wordpress or manual installation:
+1. Download the plugin zip file
+2. Upload the entire `wordpress-analizador` folder to the `/wp-content/plugins/` directory of your Wordpress installation
+3. Activate the plugin through the \'Plugins\' menu in WordPress
+4. Add your ANALIZADOR API Login to the wordpress-analizador Plugin settings page
+5. View your widget the plugin via the `Desktop WordPress`
+
+Some Web hosts block the get data if not work php-curl read the troubleshooting below
 
 == Changelog ==
 
 = 1.0.0: May 20, 2024 =
-* Birthday of Analizador
+* Birthday of Analizador Release Candidate 
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+Final Version of our Plugin
