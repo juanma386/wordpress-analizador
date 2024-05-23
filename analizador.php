@@ -4,7 +4,7 @@
  *
  * @package       ANALIZADOR
  * @author        Villalba Juan Manuel Pedro
- * @license       gplv2
+ * @license       gplv3
  * @version       1.0.0
  *
  * @wordpress-plugin
@@ -16,8 +16,8 @@
  * Author URI:    https://hexome.cloud/
  * Text Domain:   analizador
  * Domain Path:   /languages
- * License:       GPLv2
- * License URI:   https://www.gnu.org/licenses/gpl-2.0.html
+ * License:       GPLv3
+ * License URI:   https://www.gnu.org/licenses/gpl-3.0.html
  *
  * You should have received a copy of the GNU General Public License
  * along with Analizador. If not, see <https://www.gnu.org/licenses/gpl-2.0.html/>.
