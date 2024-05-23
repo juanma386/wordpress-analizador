@@ -7,7 +7,7 @@ Donate link: https://donate.stripe.com/aEUcOHegJ7EN0EweV3
 Version: 1.0.0
 Contributors: yuma2020
 Tags: Web analysis
-Requires at least: WordPress 4.7
+Requires at least: 4.7
 Tested up to: 6.5
 Requires PHP: 7.2.5
 Stable tag: 1.0.0
