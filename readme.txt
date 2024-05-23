@@ -1,12 +1,12 @@
 === Analizador ===
 Author URI: https://hexome.cloud/
 Plugin URI: https://analizador.ar
-Donate link: 
-Contributors: 
-Tags: 
-Requires at least: 
-Tested up to: 
-Requires PHP: 
+Donate link: https://donate.stripe.com/aEUcOHegJ7EN0EweV3
+Contributors: yuma2020
+Tags: analitycs, web, simple
+Requires at least: 6.5.3
+Tested up to: 6.5.3
+Requires PHP: 8.2.8
 Stable tag: 1.0.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
