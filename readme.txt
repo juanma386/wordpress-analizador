@@ -28,6 +28,16 @@ Easily add stock photos to your blog posts without leaving WordPress. Choose fro
 = Q: I have a question or need help – where can i find it? =
 A: Please check our Help & FAQ Website for a more detailed help.
 
+The Key Token Analyzer is obtained within our website
+
+== Usage ==
+
+Once you have installed and activated WordPress Analizador Web Simple, you can start using it to optimize your website for search engines. To do this, simply follow these steps:
+
+1. SignUp your Account.
+2. Get Analizador Key Token.
+3. Wait for the system to record data or refresh information manually.
+4. Get started with the product available on WordPress Admin Desktop.
 
 == Installation ==
 This section describes how to install the plugin and get it work.
