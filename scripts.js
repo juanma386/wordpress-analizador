@@ -69,14 +69,14 @@ function prepareChartData(data, period) {
 
     if (data[period] && data[period].pageviews && data[period].pageviews.data && data[period].visitors && data[period].visitors.data) {
         periodData = data[period];
-        periodData.pageviews.data.sort((a, b) => new Date(a.value) - new Date(b.value));
-        periodData.visitors.data.sort((a, b) => new Date(a.value) - new Date(b.value));
+        periodData.pageviews.data.sort((a, b) => new Date(a.value).getTime() - new Date(b.value).getTime());
+        periodData.visitors.data.sort((a, b) => new Date(a.value).getTime() - new Date(b.value).getTime());
 
         for (const item of periodData.pageviews.data) {
             const date = new Date(item.value);
-            const dayOfMonth = date.getDate();
+            const dayOfMonth = date.getUTCDate();
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            const monthName = monthNames[date.getMonth()];
+            const monthName = monthNames[date.getUTCMonth()];
             labels.push(`${dayOfMonth}/${monthName}`);
             pageviewsData.push(parseInt(item.count));
         }
@@ -90,6 +90,7 @@ function prepareChartData(data, period) {
 
     return { labels, pageviewsData, visitorsData };
 }
+
 
 
 
