@@ -438,6 +438,9 @@ function store_visitor_data() {
 
      $metrics = ['browser', 'campaign', 'city', 'continent', 'country', 'device', 'event', 'landing_page', 'language', 'os', 'page', 'pageviews', 'pageviews_hours', 'referrer', 'resolution', 'visitors', 'visitors_hours'];
      
+        $helper = new helper();
+        $helper->reset_stats();
+     
 
     foreach ( $periods as $period => $interval ) {
         foreach ($metrics as $metric) {
