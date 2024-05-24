@@ -19,6 +19,14 @@ class Analizador_Plugin_Helper {
     public static function get_phrase( $str ) {
         return __((string) $str); 
     }
+    public static function reset_stats() {
+        global $wpdb;
+        
+        $options = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE option_name LIKE 'analizador_stats_%'");
+        foreach ($options as $option) {
+            delete_option($option->option_name);
+        }
+    }
 }
 
 class Helper extends Analizador_Plugin_Helper {
