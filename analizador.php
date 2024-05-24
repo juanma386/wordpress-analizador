@@ -17,7 +17,7 @@
  * Text Domain:   analizador
  * Domain Path:   /languages
  * License:       GPLv3
- * License URI:   https://www.gnu.org/licenses/gpl-3.0.html
+ * License URI:   https://www.gnu.org/licenses/gpl-2.0.html
  *
  * You should have received a copy of the GNU General Public License
  * along with Analizador. If not, see <https://www.gnu.org/licenses/gpl-2.0.html/>.
@@ -25,7 +25,20 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// Definir constantes
+define( 'ANALIZADOR_PLUGIN_VERSION', '1.0.1' );
+define( 'ANALIZADOR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'ANALIZADOR_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+// Incluir la clase helper
+require_once ANALIZADOR_PLUGIN_PATH . 'Includes/Helper.php';
 
+use \ANALIZADOR\Includes\Helper as helper;
+
+/*
+function Analizador_plugin_display_alert( string $str, int $status  ) {
+     return helper::display_alert( (string) $str, (int) $status  );
+}
+*/
 
 add_action('wp_dashboard_setup', 'analizador_setup_widget_desktop');
 
@@ -97,11 +110,17 @@ function analizador_setup_widget() {
     if ($website_id) {
         
         $pageviews_7_days = get_option('analizador_stats_7_days_pageviews', []);
-        $visitors_7_days = get_option('analizador_stats_7_days_visitors', []);
         $pageviews_15_days = get_option('analizador_stats_15_days_pageviews', []);
-        $visitors_15_days = get_option('analizador_stats_15_days_visitors', []);
         $pageviews_30_days = get_option('analizador_stats_30_days_pageviews', []);
+
+        $visitors_7_days = get_option('analizador_stats_7_days_visitors', []);
+        $visitors_15_days = get_option('analizador_stats_15_days_visitors', []);
         $visitors_30_days = get_option('analizador_stats_30_days_visitors', []);
+
+
+        $page_7_days = get_option('analizador_stats_7_days_page', []);
+        $page_15_days = get_option('analizador_stats_15_days_page', []);
+        $page_30_days = get_option('analizador_stats_30_days_page', []);
 
         
 
@@ -110,15 +129,18 @@ function analizador_setup_widget() {
             var statsData = {
                 "7_days": {
                     "pageviews": ' . json_encode($pageviews_7_days) . ',
-                    "visitors": ' . json_encode($visitors_7_days) . '
+                    "visitors":  ' . json_encode($visitors_7_days)  . ',
+                    "page":      ' . json_encode($page_7_days)      . '
                 },
                 "15_days": {
                     "pageviews": ' . json_encode($pageviews_15_days) . ',
-                    "visitors": ' . json_encode($visitors_15_days) . '
+                    "visitors": ' . json_encode($visitors_15_days) . ',
+                    "page":      ' . json_encode($page_15_days)      . '
                 },
                 "30_days": {
                     "pageviews": ' . json_encode($pageviews_30_days) . ',
-                    "visitors": ' . json_encode($visitors_30_days) . '
+                    "visitors": ' . json_encode($visitors_30_days) . ',
+                    "page":      ' . json_encode($page_30_days)      . '
                 }
             };
         </script>
@@ -129,17 +151,34 @@ function analizador_setup_widget() {
         <span  onclick="thirtyDays()" class="badge-analizador">30 ' . __("days") . '</span>
 
         <canvas id="canvas" width="640" height="480"></canvas>
+        </br>
+        <h2>Top content over the last</h2>
+        <table class="wp-list-table widefat striped">
+            <thead>
+                <tr>
+                    <th scope="col">Page</th>
+                    <th scope="col">Visits</th>
+                </tr>
+            </thead>
+            <tbody id="page-rating">
+                <!-- Data will be dynamically populated here -->
+            </tbody>
+        </table>
+
         <script>
             function sevenDays() {
                 dataChart.chartService(7);
+                dataChart.pageService(7);
             }
 
             function fifteenDays() {
                 dataChart.chartService(15);
+                dataChart.pageService(15);
             }
 
             function thirtyDays() {
                 dataChart.chartService(30);
+                dataChart.pageService(30);
             }
 
         </script>
@@ -190,24 +229,11 @@ function analizador_setup_widget() {
     }
 
     if (!$site_exists) {
-        $create_response = wp_remote_post('https://analizador.ar/api/v1/websites', array(
-            'headers' => array(
-                'Content-Type' => 'application/x-www-form-urlencoded',
-                'Authorization' => 'Bearer ' . $token
-            ),
-            'body' => array(
-                'url' => $home_url,
-                'privacy' => 1, 
-                'email' => 1, 
-                'exclude_bots' => 1
-            )
-        ));
-
-        if (is_wp_error($create_response)) {
-            echo '<p>Error al crear el sitio web.</p>';
-        } else {
-            echo '<p>El sitio web ' . esc_html($site_url) . ' ha sido creado.</p>';
-        }
+        $helper = new helper();
+        $website_success= $helper->create_website($token, $home_url);
+        if ($website_success) {
+            echo $website_success;
+        } 
     }
 }
 
@@ -410,7 +436,8 @@ function store_visitor_data() {
         '30_days' => '-30 days',
     );
 
-     $metrics = ['pageviews', 'visitors'];
+     $metrics = ['browser', 'campaign', 'city', 'continent', 'country', 'device', 'event', 'landing_page', 'language', 'os', 'page', 'pageviews', 'pageviews_hours', 'referrer', 'resolution', 'visitors', 'visitors_hours'];
+     
 
     foreach ( $periods as $period => $interval ) {
         foreach ($metrics as $metric) {
