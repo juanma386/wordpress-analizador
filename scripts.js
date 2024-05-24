@@ -1,10 +1,7 @@
 jQuery(document).ready(function($) {
-// Definición de los tipos de visualización de gráficos disponibles
-// Definición de los tipos de visualización de gráficos disponibles
 let chartTypes = ['line', 'bar', 'radar']; 
 let currentChartTypeIndex = 0;
 
-// Función para obtener el valor de una cookie
 function getCookie(name) {
     let cookieName = name + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -21,7 +18,6 @@ function getCookie(name) {
     return null;
 }
 
-// Función para establecer el valor de una cookie
 function setCookie(name, value, days) {
     let expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + days);
@@ -29,24 +25,18 @@ function setCookie(name, value, days) {
     document.cookie = cookieValue;
 }
 
-// Obtén el tipo de gráfico almacenado en la cookie
 let storedChartType = getCookie('currentChartType');
-// Si hay un tipo de gráfico almacenado, cárgalo
 if (storedChartType) {
-    // Busca el índice del tipo de gráfico almacenado
     let storedChartTypeIndex = chartTypes.indexOf(storedChartType);
-    // Si se encuentra el tipo de gráfico almacenado, actualiza el índice actual
     if (storedChartTypeIndex !== -1) {
         currentChartTypeIndex = storedChartTypeIndex;
     }
 }
 
-// Función para cambiar el tipo de visualización del gráfico
 function toggleChartType() {
     currentChartTypeIndex = (currentChartTypeIndex + 1) % chartTypes.length; 
     let newChartType = chartTypes[currentChartTypeIndex]; 
     
-    // Almacena el nuevo tipo de gráfico en una cookie que expira en 365 días
     setCookie('currentChartType', newChartType, 365);
 
     if (window.myChart) {
@@ -101,6 +91,81 @@ function prepareChartData(data, period) {
     return { labels, pageviewsData, visitorsData };
 }
 
+
+
+
+dataChart.pageService = (days) => {
+    const dataLast = {
+        prepareLastData: function (data, period) {
+            const pageData = this.preparePageStats(data); // Obtenemos las páginas para cada período
+
+            // Verificamos si el período seleccionado existe en el objeto de datos
+            if (!pageData.hasOwnProperty(period)) {
+                console.error("El período seleccionado no es válido.");
+                return null;
+            }
+
+            // Devolvemos la página correspondiente al período seleccionado
+            return pageData[period].data;
+        },
+
+
+        preparePageStats: function(statsData) {
+            const pageStats = {
+                "7_days": statsData["7_days"].page,
+                "15_days": statsData["15_days"].page,
+                "30_days": statsData["30_days"].page
+            };
+            return pageStats;
+        },
+        pageService: function(days) {
+            let lastData = null;
+            const lastDataFor7Days = this.prepareLastData(statsData, "7_days");
+            const lastDataFor15Days = this.prepareLastData(statsData, "15_days");
+            const lastDataFor30Days = this.prepareLastData(statsData, "30_days");
+
+            if (days === 7) {
+                lastData = lastDataFor7Days;
+            } else if (days === 15) {
+                lastData = lastDataFor15Days;
+            } else if (days === 30) {
+                lastData = lastDataFor30Days;
+            } else {
+                console.error("Número de días no válido."); 
+                return;
+            }
+            
+            const container = document.getElementById('page-rating');
+            container.innerHTML = ""; // Limpiar el contenido anterior
+            
+            lastData.forEach(function(item) {
+                const row = document.createElement('tr'); // Crear una fila
+                const pageCell = document.createElement('td'); // Crear una celda para la página
+                const visitsCell = document.createElement('td'); // Crear una celda para las visitas
+
+                pageCell.textContent = item.value.substring(0, 64); // Establecer el valor de la página
+                visitsCell.textContent = item.count; // Establecer el valor de las visitas
+
+                row.appendChild(pageCell); // Añadir la celda de página a la fila
+                row.appendChild(visitsCell); // Añadir la celda de visitas a la fila
+
+                container.appendChild(row); // Añadir la fila al contenedor de la tabla
+            });
+        }
+    };
+    
+    if (days === 7) {
+            dataLast.pageService(7);
+        } else if (days === 15) {
+            dataLast.pageService(15);
+        } else if (days === 30) {
+            dataLast.pageService(30);
+        } else {
+            console.error("Número de días no válido."); 
+          return;
+    }
+};
+
 dataChart.chartService = (days) => {
     let chartData = null;
     const chartDataFor7Days = prepareChartData(statsData, "7_days");
@@ -128,20 +193,12 @@ dataChart.chartService = (days) => {
     }
 
     if (storedChartType) {
-    // Busca el índice del tipo de gráfico almacenado
     let storedChartTypeIndex = chartTypes.indexOf(storedChartType);
-    // Si se encuentra el tipo de gráfico almacenado, actualiza el índice actual
     if (storedChartTypeIndex !== -1) {
         currentChartTypeIndex = storedChartTypeIndex;
     }
 }
-
-// Crea el gráfico utilizando el tipo de gráfico almacenado o el tipo predeterminado
 let initialChartType = chartTypes[currentChartTypeIndex];
-
-
-
-    // Configura opciones específicas para el gráfico de radar
 if (initialChartType === 'radar') {
     window.chartOptions = {
         plugins: {
@@ -203,9 +260,11 @@ window.myChart = new Chart(ctx, {
     options: chartOptions
 });
 };
+    dataChart.pageService(7)
     dataChart.chartService(7); 
     $('#changeChartTypeButton').on('click', function() {
         toggleChartType();
+       
     });
 });
 
